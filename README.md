@@ -29,6 +29,16 @@ It reads your limits through the official `codex` binary's app‑server RPC meth
 
 ## Install
 
+### Easiest — let Codex do it (no terminal needed)
+
+You already have Codex. Just tell it:
+
+> Clone `github.com/yangliangyl/codex-usage-bar` locally and run its `install.sh` to set up this menu bar tool for me.
+
+Codex clones the repo and runs the installer for you — you don't type a single command.
+
+### Manual — two commands
+
 ```bash
 git clone https://github.com/yangliangyl/codex-usage-bar.git
 cd codex-usage-bar

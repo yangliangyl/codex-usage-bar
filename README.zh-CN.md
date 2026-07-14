@@ -29,6 +29,16 @@
 
 ## 安装
 
+### 最简单——让 Codex 帮你装（不用开终端）
+
+你既然在用 Codex，直接跟它说：
+
+> 帮我把 `github.com/yangliangyl/codex-usage-bar` 克隆到本地，运行里面的 `install.sh`，装好这个菜单栏工具。
+
+Codex 会自动克隆仓库、运行安装脚本——你一条命令都不用敲。
+
+### 手动——两条命令
+
 ```bash
 git clone https://github.com/yangliangyl/codex-usage-bar.git
 cd codex-usage-bar
