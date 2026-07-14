@@ -12,19 +12,36 @@ if [ ! -e "/Applications/ChatGPT.app" ]; then
     echo "   ⚠️  未检测到 /Applications/ChatGPT.app —— 请先安装并登录 ChatGPT/Codex 桌面 App，否则读不到额度。"
 fi
 
-echo "==> 2/4 安装依赖 rumps ..."
+echo "==> 2/5 检查 /usr/bin/python3 ..."
+if [ ! -x "$PY" ]; then
+    echo "   ❌ 未找到 $PY —— 请先运行：xcode-select --install"
+    exit 1
+fi
+
+echo "==> 3/5 安装依赖 rumps ..."
 if ! "$PY" -c 'import rumps' 2>/dev/null; then
     "$PY" -m pip install --user rumps
 fi
 
-echo "==> 3/4 生成开机自启配置 ..."
+echo "==> 4/5 自检：真读一次额度 ..."
+SELFTEST="$("$PY" "$DIR/fetch_quota.py" 2>&1 || true)"
+if printf '%s' "$SELFTEST" | grep -q '"ok": true'; then
+    echo "   ✅ 成功读到额度："
+    printf '%s\n' "$SELFTEST" | grep -E 'label|remaining_percent|plan_type' | sed 's/^/      /'
+else
+    echo "   ⚠️  暂时没读到额度。常见原因：ChatGPT App 未登录，或 codex 版本不兼容此接口。"
+    echo "      工具仍会安装；菜单栏会显示 ⚠️ 并给出具体原因。诊断输出："
+    printf '%s\n' "$SELFTEST" | grep -E 'error|ok' | sed 's/^/      /'
+fi
+
+echo "==> 5/5 生成开机自启配置 ..."
 mkdir -p "$HOME/Library/LaunchAgents"
 sed -e "s|__PYTHON__|$PY|g" \
     -e "s|__SCRIPT__|$DIR/codex_quota_bar.py|g" \
     -e "s|__WORKDIR__|$DIR|g" \
     "$DIR/com.user.codexquota.plist.template" > "$PLIST"
 
-echo "==> 4/4 启动 ..."
+echo "==> 启动 ..."
 launchctl unload "$PLIST" 2>/dev/null || true
 launchctl load "$PLIST"
 

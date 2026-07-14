@@ -75,6 +75,23 @@ Background refresh runs every 3 minutes; you can also hit **Refresh now** anytim
 - Crash logs: `/tmp/codexbar.err.log`, `/tmp/codexbar.out.log`.
 - macOS only. Tested on the ChatGPT desktop app (bundle id `com.openai.codex`).
 
+## Compatibility / 兼容性
+
+Verified on: macOS 26 (Apple Silicon), ChatGPT desktop app bundle `com.openai.codex`,
+`codex` 0.144.2, **Plus** plan.
+
+- Reads limits through the **experimental** `codex app-server` RPC (`account/rateLimits/read`).
+  OpenAI may change this interface in future codex versions; if a release breaks it, the fetch
+  layer in `fetch_quota.py` needs a small update. `install.sh` runs a self‑test so you'll know
+  immediately whether the interface works on your machine.
+- Only tested on a Plus account. Other plans (Free/Pro/Team) return windows generically and
+  should work, but are untested.
+- Requires Xcode Command Line Tools for `/usr/bin/python3` (`xcode-select --install` if missing).
+
+通过**实验性**接口 `codex app-server`（`account/rateLimits/read`）读额度，官方后续改版可能需要
+同步更新 `fetch_quota.py`。仅在 Plus 账户上实测；`install.sh` 会先自检、当场告诉你能不能读到。
+
 ## License
 
 MIT
+
