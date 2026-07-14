@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+# 本地生成的实际 plist（由 install.sh 写入 ~/Library/LaunchAgents，不应提交）
+com.user.codexquota.plist

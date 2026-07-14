@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.user.codexquota</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>__PYTHON__</string>
+        <string>__SCRIPT__</string>
+    </array>
+
+    <!-- 让 from fetch_quota import 能找到同目录模块 -->
+    <key>WorkingDirectory</key>
+    <string>__WORKDIR__</string>
+
+    <!-- 登录即启动 -->
+    <key>RunAtLoad</key>
+    <true/>
+
+    <!-- 只在崩溃（非零退出）时自动拉起；用户主动「退出」不会被强行复活 -->
+    <key>KeepAlive</key>
+    <dict>
+        <key>SuccessfulExit</key>
+        <false/>
+    </dict>
+
+    <!-- 崩溃/报错留痕，方便排查 -->
+    <key>StandardOutPath</key>
+    <string>/tmp/codexbar.out.log</string>
+    <key>StandardErrorPath</key>
+    <string>/tmp/codexbar.err.log</string>
+</dict>
+</plist>
