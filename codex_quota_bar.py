@@ -173,6 +173,10 @@ class CodexQuotaBar(rumps.App):
         if not r.get("ok") or not r.get("windows"):
             segments.append(("Codex ⚠️", ns_color(0, reached=True)))
         else:
+            # 前置一个纯色圆点（取最紧张窗口），比纯彩色文字更醒目
+            worst = min(w["remaining_percent"] for w in r["windows"])
+            marker = "🔴" if reached else dot(worst)
+            segments.append((marker + " ", NSColor.labelColor()))
             for i, w in enumerate(r["windows"]):
                 if i > 0:
                     segments.append((" · ", NSColor.labelColor()))
