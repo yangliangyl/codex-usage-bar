@@ -4,3 +4,10 @@ __pycache__/
 .DS_Store
 # 本地生成的实际 plist（由 install.sh 写入 ~/Library/LaunchAgents，不应提交）
 com.user.codexquota.plist
+# 小红书内容素材，不入开源仓库
+share/
+# 内部交接文档（仅本地，不入公开仓库）
+AGENTS.md
+CLAUDE.md
+handoff.md
+docs/
