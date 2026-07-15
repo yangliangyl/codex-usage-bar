@@ -29,13 +29,15 @@ It reads your limits through the official `codex` binary's app‑server RPC meth
 
 ## Install
 
-### Easiest — let Codex do it (no terminal needed)
+### Easiest — let Codex install it (no terminal needed)
 
-You already have Codex. Just tell it:
+You already have Codex. Paste it this one instruction (macOS only):
 
-> Clone `github.com/yangliangyl/codex-usage-bar` locally and run its `install.sh` to set up this menu bar tool for me.
+> Install the macOS menu-bar tool at **github.com/yangliangyl/codex-usage-bar** for me. Steps: `git clone` the repo to a local folder, `cd` in, and run `./install.sh`. The script installs its dependency (rumps), copies the runtime files to `~/Library/Application Support/CodexQuotaBar`, sets up a LaunchAgent for autostart, and self-tests by reading my quota once. Run the commands and ask me to approve anything that needs it. If `/usr/bin/python3` is missing, tell me to run `xcode-select --install` first.
 
-Codex clones the repo and runs the installer for you — you don't type a single command.
+Codex clones the repo and runs the installer for you — you don't type any commands yourself (you just approve when it asks). Afterwards the tool lives in the menu bar (no Dock icon) and starts on every login.
+
+**Prerequisites:** macOS, the ChatGPT desktop app installed and logged in.
 
 ### Manual — two commands
 

@@ -31,11 +31,13 @@
 
 ### 最简单——让 Codex 帮你装（不用开终端）
 
-你既然在用 Codex，直接跟它说：
+你既然在用 Codex，把下面这一段整段发给它（仅 macOS）：
 
-> 帮我把 `github.com/yangliangyl/codex-usage-bar` 克隆到本地，运行里面的 `install.sh`，装好这个菜单栏工具。
+> 帮我安装这个 macOS 菜单栏工具：**github.com/yangliangyl/codex-usage-bar**。步骤：`git clone` 到本地文件夹，`cd` 进去，运行 `./install.sh`。脚本会装依赖（rumps）、把运行文件复制到 `~/Library/Application Support/CodexQuotaBar`、配置开机自启的 LaunchAgent，并读一次我的额度做自检。请执行这些命令，需要我确认的地方告诉我。如果没有 `/usr/bin/python3`，先让我运行 `xcode-select --install`。
 
-Codex 会自动克隆仓库、运行安装脚本——你一条命令都不用敲。
+Codex 会自动克隆仓库、运行安装脚本——你一条命令都不用敲（它问的时候点确认即可）。装完工具就在菜单栏（不占程序坞），每次开机自动启动。
+
+**前提：** macOS，装了 ChatGPT 桌面 App 并已登录。
 
 ### 手动——两条命令
 
