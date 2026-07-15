@@ -19,7 +19,8 @@ import time
 
 import rumps
 from AppKit import (NSColor, NSFont, NSForegroundColorAttributeName,
-                    NSFontAttributeName)
+                    NSFontAttributeName, NSApplication,
+                    NSApplicationActivationPolicyAccessory)
 from Foundation import NSMutableAttributedString
 
 from fetch_quota import fetch_quota
@@ -202,4 +203,8 @@ class CodexQuotaBar(rumps.App):
 
 
 if __name__ == "__main__":
+    # 仅菜单栏模式：不在程序坞(Dock)显示图标、也不占顶部应用菜单。
+    # 在 run() 前对真正的 NSApplication 设置，启动时不会有 Dock 图标一闪。
+    NSApplication.sharedApplication().setActivationPolicy_(
+        NSApplicationActivationPolicyAccessory)
     CodexQuotaBar().run()

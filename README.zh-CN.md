@@ -86,6 +86,7 @@ cd codex-usage-bar
 
 ## 说明
 
+- 只在右上角菜单栏显示——**不在程序坞（Dock）出现图标**，也不占顶部应用菜单。
 - 自启只在崩溃（非零退出）时自动拉起；你主动点「退出」不会被强行复活。
 - 崩溃日志：`/tmp/codexbar.err.log`、`/tmp/codexbar.out.log`。
 - 仅支持 macOS。

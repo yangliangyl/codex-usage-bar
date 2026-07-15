@@ -91,6 +91,7 @@ Verified on: macOS 26 (Apple Silicon), ChatGPT desktop app bundle `com.openai.co
 
 ## Notes
 
+- Lives only in the menu bar (top‑right) — **no Dock icon**, no app menu.
 - Auto‑start only relaunches on a crash (non‑zero exit); if you click **Quit** it stays quit.
 - Crash logs: `/tmp/codexbar.err.log`, `/tmp/codexbar.out.log`.
 - macOS only.
