@@ -10,6 +10,56 @@ PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
 # 否则若克隆在 ~/Desktop、~/Documents、~/Downloads，launchd 自启进程会因 TCC
 # 报「Operation not permitted」读不到脚本。
 APP_DIR="$HOME/Library/Application Support/CodexQuotaBar"
+REQUIREMENTS="$DIR/requirements.txt"
+
+usage() {
+    echo "用法：./install.sh [--plan]"
+    echo "  --plan  只显示检查结果和拟执行操作；不安装、不取数、不写文件、不加载服务"
+}
+
+validate_sources() {
+    for required in \
+        "$DIR/codex_quota_bar.py" \
+        "$DIR/fetch_quota.py" \
+        "$DIR/com.user.codexquota.plist.template" \
+        "$REQUIREMENTS"; do
+        if [ ! -f "$required" ]; then
+            echo "❌ 缺少安装源文件：$required" >&2
+            return 1
+        fi
+    done
+    /usr/bin/plutil -lint "$DIR/com.user.codexquota.plist.template" >/dev/null
+}
+
+case "${1:-}" in
+    "") ;;
+    --plan)
+        validate_sources
+        echo "安装计划（只读，不执行）："
+        echo "- Python：$PY"
+        echo "- 依赖：${REQUIREMENTS}（安装到当前用户的 system-Python user site）"
+        echo "- 运行文件：$APP_DIR"
+        echo "- 登录项：$PLIST"
+        echo "- 安装时会读取一次真实额度做自检，并加载 LaunchAgent"
+        echo "- 卸载默认保留 rumps 和 /tmp/codexbar.*.log"
+        exit 0
+        ;;
+    -h|--help)
+        usage
+        exit 0
+        ;;
+    *)
+        usage >&2
+        exit 2
+        ;;
+esac
+
+validate_sources
+
+if [ -L "$APP_DIR" ]; then
+    echo "❌ 运行目录是符号链接，拒绝安装以免写入意外位置：$APP_DIR" >&2
+    exit 1
+fi
 
 echo "==> 1/6 检查 ChatGPT 桌面 App ..."
 if [ ! -e "/Applications/ChatGPT.app" ]; then
@@ -23,8 +73,20 @@ if [ ! -x "$PY" ]; then
 fi
 
 echo "==> 3/6 安装依赖 rumps ..."
+if ! "$PY" -c '
+from importlib.metadata import version
+parts = version("rumps").split(".")
+raise SystemExit(0 if len(parts) >= 2 and parts[0] == "0" and parts[1] == "4" else 1)
+' 2>/dev/null; then
+    if ! "$PY" -m pip --version >/dev/null 2>&1; then
+        echo "   ❌ $PY 没有可用的 pip，未安装任何依赖。" >&2
+        exit 1
+    fi
+    "$PY" -m pip install --user --requirement "$REQUIREMENTS"
+fi
 if ! "$PY" -c 'import rumps' 2>/dev/null; then
-    "$PY" -m pip install --user rumps
+    echo "   ❌ rumps 安装后仍无法由 $PY 导入，停止安装。" >&2
+    exit 1
 fi
 
 echo "==> 4/6 安装运行文件到 $APP_DIR ..."
@@ -44,10 +106,19 @@ fi
 
 echo "==> 6/6 生成开机自启配置并启动 ..."
 mkdir -p "$HOME/Library/LaunchAgents"
+PLIST_TMP="$PLIST.tmp.$$"
+cleanup() {
+    rm -f "$PLIST_TMP"
+}
+trap cleanup EXIT INT TERM
 sed -e "s|__PYTHON__|$PY|g" \
     -e "s|__SCRIPT__|$APP_DIR/codex_quota_bar.py|g" \
     -e "s|__WORKDIR__|$APP_DIR|g" \
-    "$DIR/com.user.codexquota.plist.template" > "$PLIST"
+    "$DIR/com.user.codexquota.plist.template" > "$PLIST_TMP"
+/usr/bin/plutil -lint "$PLIST_TMP" >/dev/null
+chmod 644 "$PLIST_TMP"
+mv -f "$PLIST_TMP" "$PLIST"
+trap - EXIT INT TERM
 launchctl unload "$PLIST" 2>/dev/null || true
 launchctl load "$PLIST"
 
